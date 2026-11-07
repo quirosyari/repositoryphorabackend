@@ -1,0 +1,269 @@
+###
+GET http://localhost/provincias/ HTTP/1.1
+###
+GET http://localhost/provincias/3 HTTP/1.1
+
+###
+POST http://localhost/provincias HTTP/1.1
+Content-Type: application/json
+
+{
+  "Provincia": "Nueva provincia Ale"
+}
+
+###
+DELETE http://localhost/provincias/8 HTTP/1.1
+Content-Type: application/json
+
+###
+PUT http://localhost/provincias/13 HTTP/1.1
+Content-Type: application/json
+
+{
+  "Provincia": "Actualización de la provincia 10"
+}
+ //_______________________________________________________________
+ // Rutas para Cantones
+###
+GET http://localhost/cantones/ HTTP/1.1
+###
+GET http://localhost/cantones/3 HTTP/1.1
+
+###
+POST http://localhost/cantones HTTP/1.1
+Content-Type: application/json
+
+{
+"Canton": "Nuevo cantón Yariela Quiros MA",
+"ProvinciaId":4
+}
+###
+DELETE http://localhost/cantones/8 HTTP/1.1
+Content-Type: application/json
+
+###
+PUT http://localhost/cantones/13 HTTP/1.1
+Content-Type: application/json
+
+{
+  "Canton": "Actualización del cantón 10"
+}
+
+// Rutas para Distritos
+###
+GET http://localhost/distritos/ HTTP/1.1
+###
+GET http://localhost/distritos/2 HTTP/1.1
+
+###
+POST http://localhost/distritos HTTP/1.1
+Content-Type: application/json
+
+{
+  "Distrito": "Nuevo distrito Yariela"
+}
+###
+GET http://localhost/clientes HTTP/1.1
+
+###
+GET http://localhost/clientes/1 HTTP/1.1
+
+###
+POST http://localhost/clientes HTTP/1.1
+Content-Type: application/json
+
+{
+  "Nombre": "Juan",
+  "Apellido": "Pérez",
+  "SegundoApellido": "Gómez",
+  "NumeroIdentificacion": "12345678",
+  "Correo": "juan@example.com",
+  "Telefono": "88888888",
+  "Provincia": "San José",
+  "Canton": "Central",
+  "Distrito": "Catedral",
+  "Direccion": "Calle 123",
+  "PasswordHash": "contraseña123"
+}
+###
+POST http://localhost/clientes/autenticar HTTP/1.1
+Content-Type: application/json
+
+{
+  "Correo": "juan@example.com",
+  "PasswordHash": "contraseña123"
+}
+
+###
+PUT http://localhost/clientes/1 HTTP/1.1
+Content-Type: application/json
+
+{
+  "Telefono": "99999999",
+  "Direccion": "Nueva dirección actualizada"
+}
+
+###
+DELETE http://localhost/clientes/1 HTTP/1.1
+###
+GET http://localhost/trackings HTTP/1.1
+
+###
+GET http://localhost/trackings/2 HTTP/1.1
+
+###
+POST http://localhost/trackings HTTP/1.1
+Content-Type: application/json
+
+{
+  "UsuarioId": 3,
+  "NumeroTracking": "TRACK112233",
+  "Status": "Pendiente",
+  "Ubicacion": "Puerto de origen",
+  "Observaciones": "Esperando despacho",
+  "FechaEntregaCostaRica": "2025-07-25T00:00:00.000Z"
+}
+###
+GET http://localhost/historial/trackings/1
+
+###
+GET http://localhost/historial/1
+
+###
+GET http://localhost/trackings/1
+
+###
+PUT http://localhost/trackings/1 HTTP/1.1
+Content-Type: application/json
+
+{
+  "Status": "En tránsito"
+}
+
+###
+DELETE http://localhost/trackings/1 HTTP/1.1
+
+###
+GET http://localhost/estadisticas/trackings-por-estado HTTP/1.1
+
+###
+GET http://localhost/usuarios HTTP/1.1
+
+###
+GET http://localhost/usuarios/contar-directo HTTP/1.1
+
+###
+
+GET http://localhost/usuarios HTTP/1.1
+
+###
+GET http://localhost/historial/tracking/1 HTTP/1.1
+
+###
+POST http://localhost/usuarios HTTP/1.1
+Content-Type: application/json
+
+{
+  "Nombre": "Yariela",
+  "Apellido": "Quiros",
+  "SegundoApellido": "Matarrita",
+  "NumeroIdentificacion": "504490509",
+  "Email": "yarielaquiros7@gmail.com",
+  "Telefono": "84051307",
+  "Provincia": "San José",
+  "Canton": "Central",
+  "Distrito": "Catedral",
+  "Direccion": "Calle 123",
+  "PasswordHash": "Admin123",
+  "Rol": "administradora"
+}
+
+###
+POST http://localhost/usuarios HTTP/1.1
+Content-Type: application/json
+
+{
+  "Nombre": "Yariela Quiros",
+  "Email": "yarielaquiros7@gmail.com",
+  "PasswordHash": "admin123",
+  "Rol": "administradora"
+}
+
+###
+PUT http://localhost/usuarios/3 HTTP/1.1
+Content-Type: application/json
+
+{
+  "PasswordHash": "yaquimat13",
+  
+}
+
+###
+DELETE http://localhost/usuarios/20 HTTP/1.1
+
+###
+POST http://localhost/usuarios/autenticar HTTP/1.1
+Content-Type: application/json
+
+{
+  "Email": "yarielaquiros7@gmail.com",
+  "Clave": "admin123"
+}
+### =============================
+### 📄 FACTURAS
+### =============================
+
+### 1️⃣ Obtener listado completo de facturas
+GET http://localhost/facturas/listado HTTP/1.1
+
+### 2️⃣ Obtener una factura específica por ID
+GET http://localhost/facturas HTTP/1.1
+
+###
+POST http://localhost/facturas HTTP/1.1
+Content-Type: application/json
+
+{
+  "UsuarioId": 1,
+  "TrackingId": 1,
+  "PesoLibras": 25.5,
+  "CostoPorLibra": 3.5,
+  "TipoCambioDolar": 535.00,
+  "ImpuestoUSD": 12.5
+}
+
+# 🔹 El backend debe calcular:
+# - SubtotalUSD = PesoLibras * CostoPorLibra
+# - TotalUSD = SubtotalUSD + ImpuestoUSD
+# - FechaFactura = now() si no la envías
+
+###
+
+### 4️⃣ Actualizar una factura existente
+PUT http://localhost/facturas/1 HTTP/1.1
+Content-Type: application/json
+
+{
+  "PesoLibras": 15,
+  "CostoPorLibra": 3.5,
+  "TipoCambioDolar": 540,
+  "ImpuestoUSD": 6
+}
+
+###
+
+### 5️⃣ Eliminar una factura
+DELETE http://localhost/facturas/ HTTP/1.1
+
+###
+GET http://localhost/facturas/usuario/2 HTTP/1.1
+
+###
+POST http://localhost:3000/usuarios/solicitar-codigo HTTP/1.1
+Content-Type: application/json
+
+{
+"email": "yarielaquiros7@gmail.com"
+}
+
+ 

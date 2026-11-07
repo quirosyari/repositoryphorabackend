@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // opcional si usas migrate dev
+}
+
+
+enum Rol {
+  cliente
+  administradora
+}
+
+model usuarios {
+  UsuarioId             Int               @id @default(autoincrement())
+  Nombre                String
+  Apellido              String?
+  SegundoApellido       String?
+  NumeroIdentificacion  String?           @unique
+  Email                 String            @unique
+  Telefono              String?
+  Provincia             String?
+  Canton                String?
+  Distrito              String?
+  Direccion             String?
+  PasswordHash          String
+  Rol                   Rol               @default(cliente)
+  FechaRegistro         DateTime          @default(now())
+  casilleros            casilleros[]
+  trackings             trackings[]
+  facturas              facturas[]
+  historialCambios      historialCambios[]
+
+  // 🔐 Campos para recuperación
+  CodigoRecuperacion    String?           // Código aleatorio enviado al correo
+  ExpiraCodigo          DateTime?         // Fecha y hora en que expira el código
+}
+
+model casilleros {
+  CasilleroId     Int       @id @default(autoincrement())
+  UsuarioId       Int
+  CodigoCasillero String
+  usuarios        usuarios  @relation(fields: [UsuarioId], references: [UsuarioId])
+}
+
+model trackings {
+  TrackingId          Int       @id @default(autoincrement())
+  UsuarioId           Int
+  NumeroTracking      String
+  Status              String
+  Ubicacion           String?   // opcional
+  Observaciones       String?   // opcional
+  FechaEntregaCostaRica DateTime? // 👈 nuevo campo ETA
+  FechaRegistro       DateTime  @default(now())
+  usuarios            usuarios  @relation(fields: [UsuarioId], references: [UsuarioId])
+  facturas            facturas[]
+  historialCambios             historialCambios[]
+}
+
+model facturas {
+  FacturaId         Int       @id @default(autoincrement())
+  UsuarioId         Int
+  TrackingId        Int
+  PesoLibras        Float
+  CostoPorLibra     Float
+  TipoCambioDolar   Float
+  SubtotalUSD       Float
+  ImpuestoUSD       Float
+  TotalUSD          Float
+  FechaFactura      DateTime  @default(now())
+
+  usuarios          usuarios  @relation(fields: [UsuarioId], references: [UsuarioId])
+  trackings         trackings @relation(fields: [TrackingId], references: [TrackingId])
+}
+model historialCambios {
+  CambioId        Int       @id @default(autoincrement())
+  UsuarioId       Int
+  TrackingId      Int
+  Campo           String
+  ValorAnterior   String?
+  ValorNuevo      String?
+  FechaCambio     DateTime  @default(now())
+  Entidad         String?   // 👈 agregado
+
+  usuarios        usuarios  @relation(fields: [UsuarioId], references: [UsuarioId])
+  trackings       trackings @relation(fields: [TrackingId], references: [TrackingId])
+}
+
